@@ -19,7 +19,7 @@ defaults:
 
 jobs:
   main_tests:
-    if: "github.repository == '{{ cookiecutter.github_username }}/{{ cookiecutter.repo_name }}'"
+    if: "github.repository == '{{ cookiecutter.github_host_account }}/{{ cookiecutter.repo_name }}'"
     runs-on: {{ '${{ matrix.os }}' }}
     strategy:
         fail-fast: false
@@ -93,7 +93,6 @@ jobs:
         conda info
         conda list
 {% endif %}
-
     - name: Run tests
 {% if cookiecutter.dependency_source == 'Dependencies from pip only (no conda)' %}
       shell: bash
@@ -110,7 +109,7 @@ jobs:
 
 
   pylint_check:
-    if: "github.repository == '{{ cookiecutter.github_username }}/{{ cookiecutter.repo_name }}'"
+    if: "github.repository == '{{ cookiecutter.github_host_account }}/{{ cookiecutter.repo_name }}'"
     runs-on: ubuntu-latest
 
     steps:
@@ -135,7 +134,7 @@ jobs:
 
 
   pypi_check:
-    if: "github.repository == '{{ cookiecutter.github_username }}/{{ cookiecutter.repo_name }}'"
+    if: "github.repository == '{{ cookiecutter.github_host_account }}/{{ cookiecutter.repo_name }}'"
     runs-on: ubuntu-latest
 
     steps:
@@ -181,7 +180,7 @@ jobs:
         twine check $DISTRIBUTION
   
   install_from_source_pip:
-    if: "github.repository == '{{ cookiecutter.github_username }}/{{ cookiecutter.repo_name }}'"
+    if: "github.repository == '{{ cookiecutter.github_host_account }}/{{ cookiecutter.repo_name }}'"
     runs-on: ubuntu-latest
     strategy:
         fail-fast: false
@@ -196,22 +195,18 @@ jobs:
       with:
         python-version: {{ '${{ matrix.python-version }}' }}
 
-    - name: Install Poetry
-      uses: abatilo/actions-poetry@v2.1.3
-    
     - name: Build from source
       run: |
-        poetry install
-        poetry update
-        poetry show
+        python --version
+        pip install -e ".[test,doc]"
 
     - name: Check success
       run: |
-        poetry run python -c "import MDAnalysis as mda; print(mda.__version__)"
+        python -c "import MDAnalysis as mda; print(mda.__version__)"
 
 {% if cookiecutter.dependency_source != 'Dependencies from pip only (no conda)' %}
   install_from_source_conda:
-    if: "github.repository == '{{ cookiecutter.github_username }}/{{ cookiecutter.repo_name }}'"
+    if: "github.repository == '{{ cookiecutter.github_host_account }}/{{ cookiecutter.repo_name }}'"
     runs-on: ubuntu-latest
     strategy:
         fail-fast: false
