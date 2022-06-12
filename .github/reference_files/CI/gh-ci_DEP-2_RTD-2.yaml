@@ -1,0 +1,160 @@
+name: GH Actions CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  # Specific group naming so CI is only cancelled
+  # within same PR or on merge to main
+  group: ${{ github.ref }}-${{ github.head_ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash -l {0}
+
+jobs:
+  main_tests:
+    if: "github.repository == 'cookie/repo_DEP-2_RTD-2'"
+    runs-on: ${{ matrix.os }}
+    strategy:
+        fail-fast: false
+        matrix:
+          os: [macOS-latest, ubuntu-latest, windows-latest]
+          python-version: ["3.8", "3.9", "3.10"]
+    env:
+      CYTHON_TRACE_NOGIL: 1
+      MPLBACKEND: agg
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up OS
+      uses: ./.github/actions/setup-os
+      with:
+        os-type: ${{ matrix.os }}
+
+    - name: Build information
+      run: |
+        echo "OS: ${OS_NAME}"
+        uname -a
+        df -h
+        ulimit -a
+        ${CC} -v
+        ${CXX} -v
+        ${FC} -v
+        echo "numprocs=${numprocs}"
+
+
+    # More info on options: https://github.com/conda-incubator/setup-miniconda
+    - name: Install conda dependencies
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+        environment-file: devtools/conda-envs/test_env.yaml
+        add-pip-as-python-dependency: true
+        mamba-version: "*"
+        architecture: x64
+
+        channels: defaults
+
+        activate-environment: repo_DEP-2_RTD-2-test
+        auto-update-conda: true
+        auto-activate-base: false
+        show-channel-urls: true
+
+
+
+      - name: Install package
+      run: |
+        python -m pip install . --no-deps
+
+
+    - name: Python information
+      run: |
+        which python
+        which pip
+        pip list
+
+        conda info
+        conda list
+
+
+    - name: Run tests
+      run: |
+        pytest -n $numprocs -v --cov=repo_DEP-2_RTD-2 --cov-report=xml --color=yes repo_DEP-2_RTD-2/tests/
+
+    - name: codecov
+      uses: codecov/codecov-action@v2
+      with:
+        file: coverage.xml
+        name: codecov-${{ matrix.os }}-py${{ matrix.python-version }}
+        verbose: True
+
+
+  pylint_check:
+    if: "github.repository == 'cookie/repo_DEP-2_RTD-2'"
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.9
+
+    - name: Install Pylint
+      run: |
+        which pip
+        which python
+        pip install pylint
+
+    - name: Run Pylint
+      env:
+        PYLINTRC: .pylintrc
+      run: |
+        pylint repo_DEP-2_RTD-2
+
+
+  pypi_check:
+    if: "github.repository == 'cookie/repo_DEP-2_RTD-2'"
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+
+    # More info on options: https://github.com/conda-incubator/setup-miniconda
+    - name: Install conda dependencies
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+        add-pip-as-python-dependency: true
+        mamba-version: "*"
+        architecture: x64
+
+        channels: defaults
+
+        auto-update-conda: true
+        show-channel-urls: true
+
+
+    - name: Install dependencies
+      run: |
+        pip install setuptools cython numpy twine
+
+    - name: Build package
+      run: |
+        python setup.py sdist
+
+    - name: Check package build
+      run: |
+        DISTRIBUTION=$(ls -t1 package/dist/repo_DEP-2_RTD-2-*.tar.gz | head -n 1)
+        test -n "${DISTRIBUTION}" || { echo "no distribution package/dist/repo_DEP-2_RTD-2-*.tar.gz found"; exit 1; }
+        echo "twine check $DISTRIBUTION"
+        twine check $DISTRIBUTION

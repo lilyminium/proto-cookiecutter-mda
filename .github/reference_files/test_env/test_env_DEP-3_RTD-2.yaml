@@ -1,0 +1,23 @@
+name: repo_DEP-3_RTD-2-test
+channels: 
+  - defaults
+dependencies:
+    # Base depends
+  - python
+  - pip
+
+    # MDAnalysis
+  - cython
+  - numpy
+  - MDAnalysis
+
+    # Testing
+  - pytest
+  - pytest-cov
+  - pytest-xdist
+  - codecov
+
+    # Pip-only installs
+  #- pip:
+  #  - codecov
+
