@@ -19,7 +19,7 @@ defaults:
 
 jobs:
   main_tests:
-    if: "github.repository == '{{ cookiecutter.github_host_account }}/{{ cookiecutter.repo_name }}'"
+    if: "github.repository == '{{ cookiecutter.github_url }}'"
     runs-on: {{ '${{ matrix.os }}' }}
     strategy:
         fail-fast: false
@@ -109,7 +109,7 @@ jobs:
 
 
   pylint_check:
-    if: "github.repository == '{{ cookiecutter.github_host_account }}/{{ cookiecutter.repo_name }}'"
+    if: "github.repository == '{{ cookiecutter.github_url }}'"
     runs-on: ubuntu-latest
 
     steps:
@@ -134,7 +134,7 @@ jobs:
 
 
   pypi_check:
-    if: "github.repository == '{{ cookiecutter.github_host_account }}/{{ cookiecutter.repo_name }}'"
+    if: "github.repository == '{{ cookiecutter.github_url }}'"
     runs-on: ubuntu-latest
 
     steps:
@@ -180,7 +180,7 @@ jobs:
         twine check $DISTRIBUTION
   
   install_from_source_pip:
-    if: "github.repository == '{{ cookiecutter.github_host_account }}/{{ cookiecutter.repo_name }}'"
+    if: "github.repository == '{{ cookiecutter.github_url }}'"
     runs-on: ubuntu-latest
     strategy:
         fail-fast: false
@@ -206,7 +206,7 @@ jobs:
 
 {% if cookiecutter.dependency_source != 'Dependencies from pip only (no conda)' %}
   install_from_source_conda:
-    if: "github.repository == '{{ cookiecutter.github_host_account }}/{{ cookiecutter.repo_name }}'"
+    if: "github.repository == '{{ cookiecutter.github_url }}'"
     runs-on: ubuntu-latest
     strategy:
         fail-fast: false
