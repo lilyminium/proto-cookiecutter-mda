@@ -51,15 +51,15 @@ jobs:
       - name: Construct cookiecutter
         run: |
           cookiecutter --verbose --output-dir ${TEST_REPO_NAME} --no-input . \
-            --project_name $TEST_REPO_NAME \
-            --repo-name proto-cookiecutter-mda \
-            --github_username github-actions-ci \
-            --github_host_account lilyminium \
-            --author_name "Github Actions CI" \
-            --author_email "github-action@users.noreply.github.com" \
-            --description "Test MDAKit repository: deps=${{ matrix.dependency_source }}, rtd=${{ matrix.rtd }}" \
-            --dependency_source ${{ matrix.dependency_source }} \
-            --include_ReadTheDocs ${{ matrix.rtd }}
+            project_name=$TEST_REPO_NAME \
+            repo_name=proto-cookiecutter-mda \
+            github_username=github-actions-ci \
+            github_host_account=lilyminium \
+            author_name="Github Actions CI" \
+            author_email="github-action@users.noreply.github.com" \
+            description="Test MDAKit repository: deps=${{ matrix.dependency_source }}, rtd=${{ matrix.rtd }}" \
+            dependency_source=${{ matrix.dependency_source }} \
+            include_ReadTheDocs=${{ matrix.rtd }}
           
           mkdir -p $ACTION_DIR
           cp ${TEST_REPO_NAME}/.github/workflows/CI.yaml ${ACTION_DIR}/action.yaml
