@@ -29,10 +29,23 @@ jobs:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
         python-version: ["3.8", "3.9", "3.10"]
-        dependency_source: [1, 2, 3]
-        rtd: [1, 2]
+        dependency_source:
+          - key: 1
+            value: "Prefer conda-forge over the default anaconda channel with pip fallback"
+            name: "conda-forge"
+          - key: 2
+            value: "Prefer default anaconda channel with pip fallback"
+            name: "anaconda"
+          - key: 3
+            value: "Dependencies from pip only (no conda)"
+            name: "pip"
+        rtd:
+          - key: 1
+            value: "y"
+          - key: 2
+            value: "n"
     env:
-      TEST_REPO_NAME: "testmdakit_deps-${{ matrix.dependency_source }}_rtd-${{ matrix.rtd }}"
+      TEST_REPO_NAME: "testmdakit_deps-${{ matrix.dependency_source['name'] }}_rtd-${{ matrix.rtd['value'] }}"
       ACTION_DIR: ".github/actions/${TEST_REPO_NAME}"
 
 
@@ -58,8 +71,8 @@ jobs:
             author_name="Github Actions CI" \
             author_email="github-action@users.noreply.github.com" \
             description="Test MDAKit repository: deps=${{ matrix.dependency_source }}, rtd=${{ matrix.rtd }}" \
-            dependency_source=${{ matrix.dependency_source }} \
-            include_ReadTheDocs=${{ matrix.rtd }}
+            dependency_source=${{ matrix.dependency_source['value'] }} \
+            include_ReadTheDocs=${{ matrix.rtd['value'] }}
           
           mkdir -p $ACTION_DIR
           cp ${TEST_REPO_NAME}/.github/workflows/CI.yaml ${ACTION_DIR}/action.yaml
