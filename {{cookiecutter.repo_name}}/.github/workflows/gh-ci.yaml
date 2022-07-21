@@ -184,7 +184,7 @@ jobs:
     - name: Check success
       run: |
         python -c "import MDAnalysis as mda; print(f'MDAnalysis version:', mda.__version__)"
-        python -c "import {{cookiecutter.repo_name}}; print('{{cookiecutter.repo_name}} version:', {{cookiecutter.repo_name}}.__version__)"
+        python -c "import {{cookiecutter.package_name}}; print('{{cookiecutter.package_name}} version:', {{cookiecutter.package_name}}.__version__)"
 
 {% if cookiecutter.dependency_source != 'Dependencies from pip only (no conda)' %}
   install_from_source_conda:
@@ -228,7 +228,7 @@ jobs:
       run: |
         conda activate {{cookiecutter.repo_name}}
         python -c "import MDAnalysis as mda; print(f'MDAnalysis version:', mda.__version__)"
-        python -c "import {{cookiecutter.repo_name}}; print('{{cookiecutter.repo_name}} version:', {{cookiecutter.repo_name}}.__version__)"
+        python -c "import {{cookiecutter.package_name}}; print('{{cookiecutter.package_name}} version:', {{cookiecutter.package_name}}.__version__)"
 
 
 {% endif %}

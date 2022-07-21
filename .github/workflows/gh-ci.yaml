@@ -33,7 +33,7 @@ jobs:
         dependency_source:
           - key: 1
             value: "Prefer conda-forge over the default anaconda channel with pip fallback"
-            name: "conda-forge"
+            name: "condaforge"
           - key: 2
             value: "Prefer default anaconda channel with pip fallback"
             name: "anaconda"
@@ -46,7 +46,7 @@ jobs:
           - key: 2
             value: "n"
     env:
-      TEST_REPO_NAME: "testmdakit_deps-${{ matrix.dependency_source['name'] }}_rtd-${{ matrix.rtd['value'] }}"
+      TEST_REPO_NAME: "testmdakit_deps_${{ matrix.dependency_source['name'] }}_rtd_${{ matrix.rtd['value'] }}"
       ACTION_DIR: ".github/actions/${TEST_REPO_NAME}"
 
 
@@ -67,6 +67,7 @@ jobs:
           cookiecutter --verbose --output-dir ${TEST_REPO_NAME} --no-input . \
             project_name=$TEST_REPO_NAME \
             repo_name=proto-cookiecutter-mda \
+            package_name=$TEST_REPO_NAME \
             github_username=github-actions-ci \
             github_host_account=lilyminium \
             author_name="Github Actions CI" \
