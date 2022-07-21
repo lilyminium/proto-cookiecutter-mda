@@ -11,12 +11,6 @@ on:
     # weekly tests
     - cron: "0 0 * * 0"
 
-# Custom global env block (Has to be recreated in each matrix, can't pass sequences to this)
-env:  # I want to share these between jobs, but I can't access the env from inside matrix, has to be on the steps.
-  licenses: "1 2"
-  depend-sources: "1 2 3"
-  rtd: "1 2"
-
 defaults:
   run:
     shell: bash
@@ -76,13 +70,15 @@ jobs:
             dependency_source="${{ matrix.dependency_source['value'] }}" \
             include_ReadTheDocs="${{ matrix.rtd['value'] }}"
           
+          ls *
+
           mkdir -p $ACTION_DIR
-          cp ${TEST_REPO_NAME}/.github/workflows/CI.yaml ${ACTION_DIR}/action.yaml
-          cp ${ACTION_DIR}/action.yaml ./github/actions/
+          cp ${TEST_REPO_NAME}/proto-cookiecutter-mda/.github/workflows/gh-ci.yaml ${ACTION_DIR}/action.yaml
+          cp ${ACTION_DIR}/action.yaml ./.github/actions/
 
         
       - name: Run cookiecutter CI
-        uses: "./github/actions"
+        uses: "./.github/actions"
         
 
 
