@@ -63,10 +63,11 @@ jobs:
           
           mkdir -p $ACTION_DIR
           cp ${TEST_REPO_NAME}/.github/workflows/CI.yaml ${ACTION_DIR}/action.yaml
+          cp ${ACTION_DIR}/action.yaml ./github/actions/
 
         
       - name: Run cookiecutter CI
-        uses: "${{ env.ACTION_DIR }}"
+        uses: "./github/actions"
         
 
 
