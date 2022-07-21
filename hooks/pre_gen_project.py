@@ -31,7 +31,7 @@ import re
 import sys
 
 REGEX_EMAIL = r'^[^@]+@[^@]+\.[^@]+$'
-REGEX_REPO = r'^[_\-a-zA-Z][_\-a-zA-Z0-9]+$'
+REGEX_ONLINE = r'^[_\-a-zA-Z][_\-a-zA-Z0-9]+$'
 REGEX_MODULE = r'^[_a-zA-Z][_a-zA-Z0-9]+$'
 
 
@@ -46,10 +46,10 @@ def validate(regex: str, value: str, field: str):
 if __name__ == "__main__":
 
     validate(REGEX_EMAIL, "{{ cookiecutter.author_email }}", "email")
-    validate(REGEX_REPO, "{{ cookiecutter.repo_name }}", "repo name")
-    validate(REGEX_MODULE,
+    validate(REGEX_ONLINE, "{{ cookiecutter.repo_name }}", "repo name")
+    validate(REGEX_ONLINE,
              "{{ cookiecutter.github_username }}", "GitHub username")
-    validate(REGEX_MODULE,
+    validate(REGEX_ONLINE,
              "{{ cookiecutter.github_host_account }}", "GitHub account")
     validate(
         REGEX_MODULE,
