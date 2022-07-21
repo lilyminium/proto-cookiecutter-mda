@@ -77,7 +77,7 @@ jobs:
           WORKFLOW_DIR="${TEST_REPO_NAME}/proto-cookiecutter-mda/.github/workflows/subflows"
           
           for action in build_from_source_pip pypi ; do
-            ./tests/workflow_to_action.py ${WORKFLOW_DIR}/${action} ${ACTION_DIR}/${action}
+            ./tests/workflow_to_action.py ${WORKFLOW_DIR}/${action}.yaml ${ACTION_DIR}/${action}
           done
 
         
