@@ -66,7 +66,7 @@ jobs:
 
         
       - name: Run cookiecutter CI
-        uses: ${{ env.ACTION_DIR }}
+        uses: "${{ env.ACTION_DIR }}"
         
 
 
