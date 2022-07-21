@@ -1,0 +1,5 @@
+name: Default action
+jobs:
+  steps:
+    - name: Default fail
+      run: exit 1

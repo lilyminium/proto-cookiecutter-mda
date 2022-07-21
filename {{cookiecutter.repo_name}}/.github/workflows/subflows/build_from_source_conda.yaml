@@ -1,0 +1,46 @@
+name: Conda build from source
+on:
+  workflow_call:
+  
+jobs:
+  install_from_source_conda:
+    runs-on: ubuntu-latest
+    strategy:
+        fail-fast: false
+        matrix:
+          python-version: ["3.8", "3.9", "3.10"]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install conda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        python-version: {{ '${{ matrix.python-version }}' }}
+        add-pip-as-python-dependency: true
+        architecture: x64
+        auto-update-conda: true
+        show-channel-urls: true
+{% if cookiecutter.dependency_source == 'Prefer conda-forge over the default anaconda channel with pip fallback' %}
+        mamba-version: "*"
+        channels: conda-forge, defaults
+{% else %}
+        channels: defaults
+{% endif %}
+    - name: Build from source
+      run: |
+        conda create --name {{cookiecutter.repo_name}}
+        conda activate {{cookiecutter.repo_name}}
+        conda env update --name {{cookiecutter.repo_name}} --file devtools/conda-envs/test_env.yaml
+        conda list
+        ls docs/
+        cat docs/requirements.yaml
+        conda env update --name {{cookiecutter.repo_name}} --file docs/requirements.yaml
+        pip install -e .
+        conda list
+
+    - name: Check success
+      run: |
+        conda activate {{cookiecutter.repo_name}}
+        python -c "import MDAnalysis as mda; print(f'MDAnalysis version:', mda.__version__)"
+        python -c "import {{cookiecutter.package_name}}; print('{{cookiecutter.package_name}} version:', {{cookiecutter.package_name}}.__version__)"

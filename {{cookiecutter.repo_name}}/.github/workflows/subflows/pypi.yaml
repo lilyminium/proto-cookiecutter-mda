@@ -1,0 +1,31 @@
+name: Pypi
+on:
+  workflow_call:
+
+jobs:
+  pypi_check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.9"
+
+    - name: Install dependencies
+      run: |
+        pip install setuptools cython numpy twine
+
+    - name: Build package
+      run: |
+        python setup.py sdist
+
+    - name: Check package build
+      run: |
+        DISTRIBUTION=$(ls -t1 dist/{{ cookiecutter.repo_name }}-*.tar.gz | head -n 1)
+        test -n "${DISTRIBUTION}" || { echo "no distribution dist/{{ cookiecutter.repo_name }}-*.tar.gz found"; exit 1; }
+        echo "twine check $DISTRIBUTION"
+        twine check $DISTRIBUTION
+  

@@ -42,6 +42,7 @@ jobs:
     env:
       TEST_REPO_NAME: "testmdakit_deps_${{ matrix.dependency_source['name'] }}_rtd_${{ matrix.rtd['value'] }}"
       ACTION_DIR: ".github/actions/${TEST_REPO_NAME}"
+      RUN_OS: ${{ matrix.os }}
 
 
     steps:
@@ -54,7 +55,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install -U cookiecutter
+          python -m pip install -U pyyaml cookiecutter
 
       - name: Construct cookiecutter
         run: |
@@ -73,12 +74,18 @@ jobs:
           ls *
 
           mkdir -p $ACTION_DIR
-          cp ${TEST_REPO_NAME}/proto-cookiecutter-mda/.github/workflows/gh-ci.yaml ${ACTION_DIR}/action.yaml
-          cp ${ACTION_DIR}/action.yaml ./.github/actions/
+          WORKFLOW_DIR="${TEST_REPO_NAME}/proto-cookiecutter-mda/.github/workflows/subflows"
+          
+          for action in build_from_source_pip pypi ; do
+            ./tests/workflow_to_action.py ${WORKFLOW_DIR}/${action} ${ACTION_DIR}/${action}
+          done
 
         
-      - name: Run cookiecutter CI
-        uses: "./.github/actions"
+      - name: Test build from source
+        uses: "./.github/actions/build_from_source_pip"
+
+      - name: Test Pypi
+        uses: "./.github/actions/pypi"
         
 
 
