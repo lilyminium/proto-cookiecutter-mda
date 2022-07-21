@@ -140,29 +140,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-{% if cookiecutter.dependency_source == 'Dependencies from pip only (no conda)' %}
     - name: Set up Python {{ '${{ matrix.python-version }}' }}
       uses: actions/setup-python@v3
       with:
         python-version: {{ '${{ matrix.python-version }}' }}
-
-{% else %}
-    # More info on options: https://github.com/conda-incubator/setup-miniconda
-    - name: Install conda dependencies
-      uses: conda-incubator/setup-miniconda@v2
-      with:
-        python-version: {{ '${{ matrix.python-version }}' }}
-        add-pip-as-python-dependency: true
-        architecture: x64
-{% if cookiecutter.dependency_source == 'Prefer conda-forge over the default anaconda channel with pip fallback' %}
-        mamba-version: "*"
-        channels: conda-forge, defaults
-{% elif cookiecutter.dependency_source == 'Prefer default anaconda channel with pip fallback' %}
-        channels: defaults
-{% endif %}
-        auto-update-conda: true
-        show-channel-urls: true
-{% endif %}
 
     - name: Install dependencies
       run: |
@@ -202,7 +183,8 @@ jobs:
 
     - name: Check success
       run: |
-        python -c "import MDAnalysis as mda; print(mda.__version__)"
+        python -c "import MDAnalysis as mda; print(f'MDAnalysis version:', mda.__version__)"
+        python -c "import {{cookiecutter.repo_name}}; print('{{cookiecutter.repo_name}} version:', {{cookiecutter.repo_name}}.__version__)"
 
 {% if cookiecutter.dependency_source != 'Dependencies from pip only (no conda)' %}
   install_from_source_conda:
@@ -235,6 +217,9 @@ jobs:
         conda create --name {{cookiecutter.repo_name}}
         conda activate {{cookiecutter.repo_name}}
         conda env update --name {{cookiecutter.repo_name}} --file devtools/conda-envs/test_env.yaml
+        conda list
+        ls docs/
+        cat docs/requirements.yaml
         conda env update --name {{cookiecutter.repo_name}} --file docs/requirements.yaml
         pip install -e .
         conda list
@@ -242,6 +227,8 @@ jobs:
     - name: Check success
       run: |
         conda activate {{cookiecutter.repo_name}}
-        python -c "import MDAnalysis as mda; print(mda.__version__)"
+        python -c "import MDAnalysis as mda; print(f'MDAnalysis version:', mda.__version__)"
+        python -c "import {{cookiecutter.repo_name}}; print('{{cookiecutter.repo_name}} version:', {{cookiecutter.repo_name}}.__version__)"
+
 
 {% endif %}

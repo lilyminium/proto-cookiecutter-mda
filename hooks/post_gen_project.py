@@ -70,7 +70,7 @@ def remove_rtd():
     """Remove the ReadTheDocs files if unnecessary."""
     include_rtd = '{{ cookiecutter.include_ReadTheDocs }}'
     if include_rtd == "n":
-        pathlib.Path("docs/requirements.yaml").unlink()
+        # pathlib.Path("docs/requirements.yaml").unlink()
         pathlib.Path("readthedocs.yaml").unlink()
 
 

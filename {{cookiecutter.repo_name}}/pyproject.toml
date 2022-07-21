@@ -1,14 +1,12 @@
 [build-system]
 requires = [
   "setuptools >= 40.9.0",
-  "versioneer-518",
   "wheel",
 ]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "{{cookiecutter.repo_name}}"
-version = "0.0.0"
 description = "{{cookiecutter.description}}"
 license = {{ "{" }}file = "LICENSE" {{ "}" }}
 authors = [
@@ -21,6 +19,9 @@ readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
     "MDAnalysis>=2.0.0",
+]
+dynamic = [
+    "version",
 ]
 
 [project.optional-dependencies]
