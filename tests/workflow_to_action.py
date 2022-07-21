@@ -75,7 +75,7 @@ def workflow_to_action(workflow, action):
         "runs": action_dict
     }
 
-    os.makedirs(action, exist_ok=True, parents=True)
+    os.makedirs(action, exist_ok=True)
     action_file = os.path.join(action, "action.yaml")
 
     with open(action_file, "w") as f:
