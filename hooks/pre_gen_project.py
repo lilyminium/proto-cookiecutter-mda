@@ -31,7 +31,7 @@ import re
 import sys
 
 REGEX_EMAIL = r'^[^@]+@[^@]+\.[^@]+$'
-REGEX_REPO = r'^[_-a-zA-Z][_-a-zA-Z0-9]+$'
+REGEX_REPO = r'^[_\-a-zA-Z][_\-a-zA-Z0-9]+$'
 REGEX_MODULE = r'^[_a-zA-Z][_a-zA-Z0-9]+$'
 
 
