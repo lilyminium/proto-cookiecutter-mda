@@ -87,6 +87,19 @@ jobs:
 
       - name: Install act
         uses: actionsflow/setup-act@v1
+
+      - name: Build Docker
+        run: |
+          docker pull catthehacker/ubuntu:act-latest
+          docker images catthehacker/ubuntu:act-latest
+          docker images catthehacker/ubuntu:act-latest --format "{{.ID}}"
+          IMAGE_ID=$(docker images catthehacker/ubuntu:act-latest --format "{{.ID}}")
+          echo $IMAGE_ID
+          docker run --name act-container -i catthehacker/ubuntu:${IMAGE_ID}
+          docker exec -i catthehacker/ubuntu bash -c "wget 'https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh'"
+          docker exec -i catthehacker/ubuntu bash -c "./Miniconda3-latest-Linux-x86_64.sh"
+          docker commit catthehacker/ubuntu:act-latest
+
         
       - name: Test build from source
         run: |
@@ -96,4 +109,4 @@ jobs:
 
           cat .github/workflows/gh-ci.yaml
 
-          act -P ubuntu-latest=catthehacker/ubuntu:act-latest
+          act -P ubuntu-latest=act-latest
