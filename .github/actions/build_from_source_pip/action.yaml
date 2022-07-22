@@ -2,4 +2,5 @@ name: Default action
 runs:
   steps:
     - name: Default fail
+      shell: bash
       run: exit 1
