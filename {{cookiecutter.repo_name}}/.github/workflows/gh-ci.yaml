@@ -51,7 +51,6 @@ jobs:
 {% else %}
     # More info on options: https://github.com/conda-incubator/setup-miniconda
     - name: Install conda dependencies
-      shell: bash
       uses: conda-incubator/setup-miniconda@v2
       with:
         miniconda-version: 'latest'
