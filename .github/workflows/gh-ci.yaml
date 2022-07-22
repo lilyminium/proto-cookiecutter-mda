@@ -93,4 +93,7 @@ jobs:
           cd ${TEST_REPO_NAME}/proto-cookiecutter-mda
           act --version
           docker images
+
+          cat .github/workflows/gh-ci.yaml
+
           act -P ubuntu-latest=catthehacker/ubuntu:act-latest
