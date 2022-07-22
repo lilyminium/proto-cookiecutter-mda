@@ -91,4 +91,5 @@ jobs:
       - name: Test build from source
         run: |
           cd ${TEST_REPO_NAME}/proto-cookiecutter-mda
+          act --version
           act -P ubuntu-latest=ubuntu:latest
