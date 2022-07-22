@@ -54,13 +54,13 @@ jobs:
       shell: bash -l {0}
       uses: conda-incubator/setup-miniconda@v2
       with:
-        miniconda-version: latest
+        miniconda-version: "latest"
         python-version: {{ '${{ matrix.python-version }}' }}
         environment-file: devtools/conda-envs/test_env.yaml
         add-pip-as-python-dependency: true
         architecture: x64
 {% if cookiecutter.dependency_source == 'Prefer conda-forge over the default anaconda channel with pip fallback' %}
-        mamba-version: "*"
+        # mamba-version: "*"
         channels: conda-forge, defaults
 {% elif cookiecutter.dependency_source == 'Prefer default anaconda channel with pip fallback' %}
         channels: defaults
@@ -157,8 +157,8 @@ jobs:
 
     - name: Check package build
       run: |
-        DISTRIBUTION=$(ls -t1 dist/{{ cookiecutter.repo_name }}-*.tar.gz | head -n 1)
-        test -n "${DISTRIBUTION}" || { echo "no distribution dist/{{ cookiecutter.repo_name }}-*.tar.gz found"; exit 1; }
+        DISTRIBUTION=$(ls -t1 dist/{{ cookiecutter.package_name }}-*.tar.gz | head -n 1)
+        test -n "${DISTRIBUTION}" || { echo "no distribution dist/{{ cookiecutter.package_name }}-*.tar.gz found"; exit 1; }
         echo "twine check $DISTRIBUTION"
         twine check $DISTRIBUTION
   
