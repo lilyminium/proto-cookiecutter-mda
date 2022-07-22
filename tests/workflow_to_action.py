@@ -11,10 +11,13 @@ parser.add_argument("workflow", help="Path to workflow")
 parser.add_argument("action", help="Path to action")
 
 class YamlDumper(yaml.SafeDumper):
-    def represent_str(self, data):
+    def represent_str_newline(self, data):
         if "\n" in data:
             return super().represent_scalar("tag:yaml.org,2002:str", data, style="|")
         return super().represent_str(data)
+    
+YamlDumper.add_representer(str, YamlDumper.represent_str_newline)
+
 
 def get_replacements():
     VAR_START = r"\$\{\{\s*"
@@ -83,7 +86,7 @@ def workflow_to_action(workflow, action):
     action_file = os.path.join(action, "action.yaml")
 
     with open(action_file, "w") as f:
-        yaml.dump(action_contents, f, Dumper=YamlDumper)
+        yaml.dump(action_contents, f, Dumper=YamlDumper, sort_keys=False)
 
 if __name__ == "__main__":
     args = parser.parse_args()
