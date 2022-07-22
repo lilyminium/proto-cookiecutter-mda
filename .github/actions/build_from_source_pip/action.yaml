@@ -1,5 +1,6 @@
 name: Default action
 runs:
+  using: "composite"
   steps:
     - name: Default fail
       shell: bash
