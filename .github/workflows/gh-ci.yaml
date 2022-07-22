@@ -85,12 +85,10 @@ jobs:
             cat ${ACTION_DIR}/${action}/action.yaml
           done
 
+      - name: Install act
+        uses: actionsflow/setup-act@v1
         
       - name: Test build from source
-        uses: "./.github/actions/build_from_source_pip"
-
-      - name: Test Pypi
-        uses: "./.github/actions/pypi"
-        
-
-
+        run: |
+          cd ${TEST_REPO_NAME}/proto-cookiecutter-mda
+          act -v
