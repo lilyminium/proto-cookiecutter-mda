@@ -25,12 +25,12 @@ jobs:
         os: [ubuntu-latest]
         python-version: ["3.8", "3.9", "3.10"]
         dependency_source:
-          - key: 1
-            value: "Prefer conda-forge over the default anaconda channel with pip fallback"
-            name: "condaforge"
-          - key: 2
-            value: "Prefer default anaconda channel with pip fallback"
-            name: "anaconda"
+          # - key: 1
+          #   value: "Prefer conda-forge over the default anaconda channel with pip fallback"
+          #   name: "condaforge"
+          # - key: 2
+          #   value: "Prefer default anaconda channel with pip fallback"
+          #   name: "anaconda"
           - key: 3
             value: "Dependencies from pip only (no conda)"
             name: "pip"
