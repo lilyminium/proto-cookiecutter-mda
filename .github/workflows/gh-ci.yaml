@@ -92,4 +92,5 @@ jobs:
         run: |
           cd ${TEST_REPO_NAME}/proto-cookiecutter-mda
           act --version
-          act -P ubuntu-latest=ubuntu:latest
+          docker images
+          act -P ubuntu-latest=catthehacker/ubuntu:act-latest
