@@ -51,9 +51,10 @@ jobs:
 {% else %}
     # More info on options: https://github.com/conda-incubator/setup-miniconda
     - name: Install conda dependencies
+      shell: bash -l {0}
       uses: conda-incubator/setup-miniconda@v2
       with:
-        miniconda-version: 'latest'
+        miniconda-version: latest
         python-version: {{ '${{ matrix.python-version }}' }}
         environment-file: devtools/conda-envs/test_env.yaml
         add-pip-as-python-dependency: true
