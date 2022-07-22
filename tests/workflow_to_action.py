@@ -10,9 +10,11 @@ parser = argparse.ArgumentParser(description="Converts workflow to action")
 parser.add_argument("workflow", help="Path to workflow")
 parser.add_argument("action", help="Path to action")
 
-
-
-
+class YamlDumper(yaml.SafeDumper):
+    def represent_str(self, data):
+        if "\n" in data:
+            return super().represent_scalar("tag:yaml.org,2002:str", data, style="|")
+        return super().represent_str(data)
 
 def get_replacements():
     VAR_START = r"\$\{\{\s*"
@@ -38,6 +40,8 @@ def load_file(path):
     for pattern, value in replacements.items():
         contents = re.sub(pattern, value, contents)
     return yaml.safe_load(contents)
+
+
 
 def job_to_action(job):
     job.pop("runs-on", None)
@@ -79,7 +83,7 @@ def workflow_to_action(workflow, action):
     action_file = os.path.join(action, "action.yaml")
 
     with open(action_file, "w") as f:
-        yaml.dump(action_contents, f)
+        yaml.dump(action_contents, f, Dumper=YamlDumper)
 
 if __name__ == "__main__":
     args = parser.parse_args()
